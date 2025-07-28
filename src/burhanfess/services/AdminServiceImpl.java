@@ -1,27 +1,25 @@
 package burhanfess.services;
 
 import java.util.List;
-
-import burhanfess.exceptions.InvallidPasswordException;
 import burhanfess.exceptions.MenfessNotFoundException;
-import burhanfess.exceptions.UserAlreadyExistsException;
-import burhanfess.exceptions.UserNotFoundException;
 import burhanfess.menfess.Menfess;
 import burhanfess.repositories.MenfessRepository;
 import burhanfess.repositories.UserRepository;
+import burhanfess.users.Admin;
 import burhanfess.users.User;
-
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.ArrayList;
 
 public class AdminServiceImpl implements AdminService{
     private UserRepository userRepository;
     private MenfessRepository menfessRepository;
+    private Admin admin;
 
-    public AdminServiceImpl(UserRepository userRepository, MenfessRepository menfessRepository) {
+    public AdminServiceImpl(Admin admin, UserRepository userRepository, MenfessRepository menfessRepository) {
+        this.admin = admin;
         this.userRepository = userRepository;
         this.menfessRepository = menfessRepository;
+        
     }
 
     @Override
@@ -100,11 +98,5 @@ public class AdminServiceImpl implements AdminService{
         List<User> users = userRepository.getAllUsers();
         users.sort(comparator);
         return users;
-    }
-
-    @Override
-    public List<User> getAllUsers(burhanfess.users.comparators.Comparator<User> comparator) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllUsers'");
     }
 }

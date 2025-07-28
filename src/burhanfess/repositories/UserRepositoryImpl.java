@@ -3,6 +3,7 @@ package burhanfess.repositories;
 import java.util.ArrayList;
 import java.util.List;
 
+import burhanfess.users.Admin;
 import burhanfess.users.User;
 
 public class UserRepositoryImpl implements UserRepository {
@@ -11,7 +12,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     public UserRepositoryImpl() {
         users = new ArrayList<>();
-        users.add(new User("admin", "admin")); // Example admin user
+        users.add(new Admin("admin", "admin")); // Example admin user
     }
 
     public UserRepository getInstance() {

@@ -8,6 +8,7 @@ import burhanfess.exceptions.UserAlreadyExistsException;
 import burhanfess.repositories.MenfessRepository;
 import burhanfess.repositories.UserRepository;
 import burhanfess.services.AdminService;
+import burhanfess.services.AdminServiceImpl;
 import burhanfess.services.CosmicService;
 import burhanfess.services.CosmicServiceImpl;
 import burhanfess.services.UnauthorizedService;
@@ -24,9 +25,6 @@ public class UnauthorizedDisplay implements Display{
         this.unauthorizedService = unauthorizedService;
         this.userRepository = userRepository;
         this.menfessRepository = menfessRepository;
-    }
-    public UnauthorizedDisplay(UnauthorizedService unauthorizedService) {
-        this.unauthorizedService = unauthorizedService;
     }
 
     @Override
@@ -64,12 +62,13 @@ public class UnauthorizedDisplay implements Display{
                         if (login instanceof Cosmic) {
                             Cosmic cosmicUser = (Cosmic) login;
                             CosmicService cosmicService = new CosmicServiceImpl(cosmicUser, userRepository, menfessRepository);
-                            CosmicDisplay cosmicDisplay = new CosmicDisplay(cosmicUser, cosmicService, userRepository);
+                            CosmicDisplay cosmicDisplay = new CosmicDisplay(cosmicUser, cosmicService, userRepository, menfessRepository);
                             cosmicDisplay.showMenu();
-                        // } else if (login instanceof Admin) {
-                        //     AdminService adminService = new AdminServiceImpl(userRepository, menfessRepository);
-                        //     AdminDisplay adminDisplay = new AdminDisplay((Admin) login, adminService);
-                        //     adminDisplay.showMenu();
+                        } else if (login instanceof Admin) {
+                            Admin adminUser = (Admin) login;
+                            AdminService adminService = new AdminServiceImpl(adminUser, userRepository, menfessRepository);
+                            AdminDisplay adminDisplay = new AdminDisplay(adminUser, adminService);
+                            adminDisplay.showMenu();
                         } else {
                             System.out.println("Role user tidak dikenali.");
                         }

@@ -12,6 +12,7 @@ import burhanfess.menfess.Menfess;
 import burhanfess.services.CosmicService;
 import burhanfess.users.Cosmic;
 import burhanfess.users.User;
+import burhanfess.repositories.MenfessRepository;
 import burhanfess.repositories.UserRepository;
 
 public class CosmicDisplay implements Display {
@@ -19,12 +20,14 @@ public class CosmicDisplay implements Display {
     private CosmicService cosmicService;
     private DateTimeFormatter formatter;
     private UserRepository userRepository;
+    private MenfessRepository menfessRepository;
 
-    public CosmicDisplay(Cosmic cosmic, CosmicService cosmicService, UserRepository userRepository) {
+    public CosmicDisplay(Cosmic cosmic, CosmicService cosmicService, UserRepository userRepository, MenfessRepository menfessRepository) {
         this.cosmic = cosmic;
         this.cosmicService = cosmicService;
         this.formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         this.userRepository = userRepository;
+        this.menfessRepository = menfessRepository;
     }
 
     @Override
@@ -123,6 +126,7 @@ public class CosmicDisplay implements Display {
             System.out.println("Tidak ada menfess publik saat ini.");
         } 
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         for (Menfess menfess : unhiddenMenfesses) {
             System.out.println("[" + menfess.getType() + "] ");
             if (menfess instanceof ConfessFess) {
@@ -157,7 +161,7 @@ public class CosmicDisplay implements Display {
             System.out.println("ID: " + menfess.getId());
             System.out.println(menfess.getContent());
             String waktuKirim = menfess.getTimestamp().format(formatter);
-            System.out.println("Dikirim pada: " + waktuKirim);
+            System.out.println("Dikirim pada: " + waktuKirim + "\n");
         }
     }
 

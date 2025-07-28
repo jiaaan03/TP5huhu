@@ -1,7 +1,7 @@
 package burhanfess.users;
 
 public class User {
-    private int idGenerator;
+    private static int idGenerator;
     private int id;
     private String username;
     private String password;

@@ -1,9 +1,7 @@
 package burhanfess.services;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import burhanfess.exceptions.InvallidPasswordException;
-import burhanfess.exceptions.UserNotFoundException;
 import burhanfess.menfess.ConfessFess;
 import burhanfess.menfess.CurhatFess;
 import burhanfess.menfess.Menfess;
@@ -14,9 +12,6 @@ import burhanfess.users.Cosmic;
 import burhanfess.users.User;
 
 public class CosmicServiceImpl implements CosmicService {
-    public List<Menfess> getAllUnhiddenMenfesses() {
-        return null;
-    }
     private Cosmic cosmic;
     private UserRepository userRepository;
     private MenfessRepository menfessRepository;
@@ -59,5 +54,21 @@ public class CosmicServiceImpl implements CosmicService {
     public void sendConfessFess(User user, String content, User receiveUsername) {
         ConfessFess confess = new ConfessFess(user, content, receiveUsername);
         menfessRepository.addMenfess(confess);
+    }
+
+    @Override
+    public List<Menfess> getAllUnhiddenMenfesses() {
+        List<Menfess> allMenfesses =  menfessRepository.getAllMenfesses();
+        if (allMenfesses == null) {
+            return new ArrayList<>();
+        }
+
+        List<Menfess> unhiddenMenfesses = new ArrayList<>();
+        for(Menfess menfess : allMenfesses) {
+            if (!menfess.isHidden()) {
+                unhiddenMenfesses.add(menfess);
+            }
+        }
+        return unhiddenMenfesses;
     }
 }

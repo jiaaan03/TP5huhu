@@ -3,6 +3,7 @@ package burhanfess.services;
 import burhanfess.exceptions.InvalidLoginCredentialsException;
 import burhanfess.exceptions.UserAlreadyExistsException;
 import burhanfess.repositories.UserRepository;
+import burhanfess.users.Admin;
 import burhanfess.users.Cosmic;
 import burhanfess.users.User;
 
@@ -39,6 +40,13 @@ public class UnauthorizedServicelmpl implements UnauthorizedService {
         if (user == null || !user.getPassword().equals(password)) {
             throw new InvalidLoginCredentialsException("Username atau password salah. Silakan coba lagi.");
         }
+
+        if (user.getRole().equals("Admin")) {
+            return new Admin(user.getUsername(), user.getPassword());
+        } else if (user.getRole().equals("Cosmic")) {
+            return new Cosmic(user.getUsername(), user.getPassword());
+        }
+        
         System.out.println("Login berhasil! Selamat datang, " + user.getUsername() + ".");
         System.out.println("=====================================");
         System.out.println("BurhanFess - 2025");

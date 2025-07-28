@@ -46,7 +46,9 @@ public class Menfess {
     }
 
     public String getType() {
-        return "Menfess";
+        if (this instanceof ConfessFess) return "Confession";
+        if (this instanceof PromosiFess) return "Promosi";
+        return "Curhat";
     }
 
     public String toString() { // default copilot

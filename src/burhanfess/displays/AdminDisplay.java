@@ -3,8 +3,10 @@ package burhanfess.displays;
 import java.util.List;
 import java.util.Scanner;
 
+import burhanfess.exceptions.MenfessNotFoundException;
 import burhanfess.exceptions.UserAlreadyExistsException;
 import burhanfess.exceptions.UserNotFoundException;
+import burhanfess.menfess.ConfessFess;
 import burhanfess.menfess.Menfess;
 import burhanfess.services.AdminService;
 import burhanfess.users.Admin;
@@ -14,11 +16,17 @@ import burhanfess.users.comparators.UserIdComparator;
 import burhanfess.users.comparators.UserUsernameComparator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 public class AdminDisplay implements Display {
     private Admin admin;
     private AdminService adminService;
 
+    public AdminDisplay(Admin admin, AdminService adminService) {
+        this.admin = admin;
+        this.adminService = adminService;
+    }
+    
     @Override
     public void showMenu() {
         Scanner input = new Scanner(System.in);
@@ -134,7 +142,7 @@ public class AdminDisplay implements Display {
             System.out.print("Masukkan password baru: ");
             String newPassword = input.nextLine();
             Comparator<User> comparator = new UserUsernameComparator();
-            List<User> users = adminService.getAllUsers();
+            List<User> users = adminService.getAllUsers(comparator);
             boolean userFound = false;
             for (User user : users) {
                 if (user.getUsername().equals(username)) {
@@ -155,23 +163,82 @@ public class AdminDisplay implements Display {
     }
 
     public void hideMenfess() {
-        // Scanner input = new Scanner(System.in);
-        // try {
-        //     System.out.println("Daftar menfess yang ditampilkan:");
-        //     List<Menfess> hiddenMenfesses = adminService.getAllHiddenMenfesses();
-        //     if (hiddenMenfesses.isEmpty()) {
-        //         System.out.println("Tidak ada menfess yang tersembunyi.");
-        //         return;
-        //     }
-        //     for (Menfess menfess : hiddenMenfesses) {
-        //         System.out.println("ID: " + menfess.getId() + ", Konten: " + menfess.getContent());
-        //         System.out.println(menfess.getMessage());
-        //         System.out.println(menfess.getTimestamp());
-        // }
+        Scanner input = new Scanner(System.in);
+        try {
+            System.out.println("\nDaftar menfess yang ditampilkan: ");
+            List<Menfess> unhiddenMenfesses = adminService.getAllUnhiddenMenfesses();
+            if (unhiddenMenfesses.isEmpty()) {
+                System.out.println("Tidak ada menfess yang ditampilkan saat ini");
+                return;
+            }
+
+            for(Menfess menfess : unhiddenMenfesses) {
+                System.out.println("[" + menfess.getType() + "]" + "oleh ");
+                if (menfess instanceof ConfessFess) {
+                    System.out.println("anonim");
+                } else {
+                    System.out.println(menfess.getUser().getUsername());
+                }
+                System.out.println("ID: " + menfess.getId());
+                System.out.println(menfess.getContent());
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                String waktu = menfess.getTimestamp().format(formatter);
+                System.out.println("Dikirim pada: " + waktu);
+            }
+            System.out.println("Masukkan ID menfess yang ingin disembunyikan: ");
+            String inputID = input.nextLine();
+            try {
+                int menfessID = Integer.parseInt(inputID);
+                adminService.hideMenfess(menfessID);
+                System.out.println("Menfess berhasil menyembunyikan");
+            } catch (NumberFormatException e) {
+                System.out.println("Input tidak valid. Silakan masukkan angka yang sesuai");
+            } catch (MenfessNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+        } catch (Exception e) {
+            System.out.println("Terjadi kesalahan: " + e.getMessage());
+        }
+        
     }
 
     public void unhideMenfess() {
+        Scanner input = new Scanner(System.in);
+        try {
+            System.out.println("\nDaftar menfess yang disembunyikan");
+            List<Menfess> hiddMenfesses = adminService.getAllHiddenMenfesses();
+            if (hiddMenfesses.isEmpty()) {
+                System.out.println("Tidak ada menfess yang disembunyikan saat ini");
+                return;
+            }
 
+            for (Menfess menfess : hiddMenfesses) {
+                System.out.println("[" + menfess.getType() + "] oleh " );
+                if (menfess instanceof ConfessFess) {
+                    System.out.println("anonim");
+                } else {
+                    System.out.println(menfess.getUser().getUsername());
+                }
+                System.out.println("ID: " + menfess.getId());
+                System.out.println(menfess.getContent());
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                String waktu = menfess.getTimestamp().format(formatter);
+                System.out.println("Dikirim pada: " + waktu);
+            }
+            System.out.println("Masukkan ID menfess yang ingin disembunyikan: ");
+            String inputID = input.nextLine();
+            try {
+                int menfessID = Integer.parseInt(inputID);
+                adminService.unhideMenfess(menfessID);
+                System.out.println("Menfess berhasil ditampilkan");
+            } catch (NumberFormatException e) {
+                System.out.println("Input tidak valid. Silakan masukkan angka yang sesuai");
+            } catch (MenfessNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+        } catch (Exception e) {
+            System.out.println("Terjadi kesalahan: " + e.getMessage());
+        }
     }
 
     public void logout() {

@@ -10,8 +10,9 @@ import burhanfess.users.User;
 public class MenfessRepositoryImpl implements MenfessRepository {
     private List<Menfess> menfesses;
     private MenfessRepository menfessRepository;
+    private List<Menfess> menfessList = new ArrayList<>();
 
-    private MenfessRepositoryImpl() {
+    public MenfessRepositoryImpl() {
         this.menfesses = new ArrayList<>();
     }
 
@@ -88,6 +89,6 @@ public class MenfessRepositoryImpl implements MenfessRepository {
     }
 
     public List<Menfess> getAllMenfesses() {
-        return new ArrayList<>(menfesses);
+        return new ArrayList<>(menfessList);
     }
 }
