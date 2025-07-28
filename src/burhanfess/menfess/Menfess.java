@@ -19,6 +19,7 @@ public class Menfess {
         this.content = content;
         this.id = ++idGenerator;
         this.timestamp = LocalDateTime.now();
+        this.isHidden = false;
     }
 
     public String getContent() {
